@@ -41,7 +41,18 @@ const TravelBookingForm = () => {
     children: 0,
   });
 
-  const [addBooking, { loading, error }] = useMutation(ADD_BOOKING);
+  const [addBooking, { loading, error }] = useMutation(ADD_BOOKING, {
+    update(cache, { data: { addBooking } }) {
+      cache.modify({
+        fields: {
+          getBookings(existingBookings = []) {
+            return [...existingBookings, addBooking];
+          },
+        },
+      });
+    },
+  });
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
